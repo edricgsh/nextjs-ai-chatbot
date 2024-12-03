@@ -119,11 +119,11 @@ The application uses a relational database with the following core entities:
 
 ## Environment Variables
 
-| Variable         | Description                                                                                                                          | Required | Example                           |
-| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------- |
-| `OPENAI_API_KEY` | API key for OpenAI services. Get it from [OpenAI Platform](https://platform.openai.com/account/api-keys)                             | Yes      | sk-abcd1234...                    |
-| `AUTH_SECRET`    | Secret key for authentication. Generate using `npx auth secret`                                                                    | Yes      | xkjjk329...                  |
-| `POSTGRES_URL`   | Connection string for Supabase                                                                                                       | Yes      | postgres://user:pass@host:5432/db |
+| Variable         | Description                                                                                              | Required | Example                           |
+| ---------------- | -------------------------------------------------------------------------------------------------------- | -------- | --------------------------------- |
+| `OPENAI_API_KEY` | API key for OpenAI services. Get it from [OpenAI Platform](https://platform.openai.com/account/api-keys) | Yes      | sk-abcd1234...                    |
+| `AUTH_SECRET`    | Secret key for authentication. Generate using `npx auth secret`                                          | Yes      | xkjjk329...                       |
+| `POSTGRES_URL`   | Connection string for Supabase                                                                           | Yes      | postgres://user:pass@host:5432/db |
 
 ## Prerequisites
 
@@ -161,3 +161,15 @@ Deploy your application to production:
 ```bash
 vercel --prod
 ```
+
+## Future Improvements
+
+### Authentication Enhancements
+
+1. Add email verification for new sign ups (currently email-only registration without verification)
+2. Implement password reset capability
+3. Enable third-party authentication providers
+
+### Chat Functionality
+
+1. Expand beyond text-only messages to support rich media inputs (images, audio files, video content)
