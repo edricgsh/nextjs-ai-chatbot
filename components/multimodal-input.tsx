@@ -10,20 +10,20 @@ import cx from 'classnames';
 import { motion } from 'framer-motion';
 import type React from 'react';
 import {
-  useRef,
-  useEffect,
-  useState,
   useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ChangeEvent,
   type Dispatch,
   type SetStateAction,
-  type ChangeEvent,
 } from 'react';
 import { toast } from 'sonner';
 import { useLocalStorage, useWindowSize } from 'usehooks-ts';
 
 import { sanitizeUIMessages } from '@/lib/utils';
 
-import { ArrowUpIcon, PaperclipIcon, StopIcon } from './icons';
+import { ArrowUpIcon, StopIcon } from './icons';
 import { PreviewAttachment } from './preview-attachment';
 import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
@@ -66,13 +66,13 @@ export function MultimodalInput({
   setMessages: Dispatch<SetStateAction<Array<Message>>>;
   append: (
     message: Message | CreateMessage,
-    chatRequestOptions?: ChatRequestOptions,
+    chatRequestOptions?: ChatRequestOptions
   ) => Promise<string | null | undefined>;
   handleSubmit: (
     event?: {
       preventDefault?: () => void;
     },
-    chatRequestOptions?: ChatRequestOptions,
+    chatRequestOptions?: ChatRequestOptions
   ) => void;
   className?: string;
 }) {
@@ -88,13 +88,15 @@ export function MultimodalInput({
   const adjustHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight + 2}px`;
+      textareaRef.current.style.height = `${
+        textareaRef.current.scrollHeight + 2
+      }px`;
     }
   };
 
   const [localStorageInput, setLocalStorageInput] = useLocalStorage(
     'input',
-    '',
+    ''
   );
 
   useEffect(() => {
@@ -180,7 +182,7 @@ export function MultimodalInput({
         const uploadPromises = files.map((file) => uploadFile(file));
         const uploadedAttachments = await Promise.all(uploadPromises);
         const successfullyUploadedAttachments = uploadedAttachments.filter(
-          (attachment) => attachment !== undefined,
+          (attachment) => attachment !== undefined
         );
 
         setAttachments((currentAttachments) => [
@@ -193,15 +195,15 @@ export function MultimodalInput({
         setUploadQueue([]);
       }
     },
-    [setAttachments],
+    [setAttachments]
   );
 
   return (
-    <div className="relative w-full flex flex-col gap-4">
+    <div className='relative w-full flex flex-col gap-4'>
       {messages.length === 0 &&
         attachments.length === 0 &&
         uploadQueue.length === 0 && (
-          <div className="grid sm:grid-cols-2 gap-2 w-full">
+          <div className='grid sm:grid-cols-2 gap-2 w-full'>
             {suggestedActions.map((suggestedAction, index) => (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -212,7 +214,7 @@ export function MultimodalInput({
                 className={index > 1 ? 'hidden sm:block' : 'block'}
               >
                 <Button
-                  variant="ghost"
+                  variant='ghost'
                   onClick={async () => {
                     window.history.replaceState({}, '', `/chat/${chatId}`);
 
@@ -221,10 +223,10 @@ export function MultimodalInput({
                       content: suggestedAction.action,
                     });
                   }}
-                  className="text-left border rounded-xl px-4 py-3.5 text-sm flex-1 gap-1 sm:flex-col w-full h-auto justify-start items-start"
+                  className='text-left border rounded-xl px-4 py-3.5 text-sm flex-1 gap-1 sm:flex-col w-full h-auto justify-start items-start'
                 >
-                  <span className="font-medium">{suggestedAction.title}</span>
-                  <span className="text-muted-foreground">
+                  <span className='font-medium'>{suggestedAction.title}</span>
+                  <span className='text-muted-foreground'>
                     {suggestedAction.label}
                   </span>
                 </Button>
@@ -234,8 +236,8 @@ export function MultimodalInput({
         )}
 
       <input
-        type="file"
-        className="fixed -top-4 -left-4 size-0.5 opacity-0 pointer-events-none"
+        type='file'
+        className='fixed -top-4 -left-4 size-0.5 opacity-0 pointer-events-none'
         ref={fileInputRef}
         multiple
         onChange={handleFileChange}
@@ -243,7 +245,7 @@ export function MultimodalInput({
       />
 
       {(attachments.length > 0 || uploadQueue.length > 0) && (
-        <div className="flex flex-row gap-2 overflow-x-scroll items-end">
+        <div className='flex flex-row gap-2 overflow-x-scroll items-end'>
           {attachments.map((attachment) => (
             <PreviewAttachment key={attachment.url} attachment={attachment} />
           ))}
@@ -264,12 +266,12 @@ export function MultimodalInput({
 
       <Textarea
         ref={textareaRef}
-        placeholder="Send a message..."
+        placeholder='Send a message...'
         value={input}
         onChange={handleInput}
         className={cx(
           'min-h-[24px] max-h-[calc(75dvh)] overflow-hidden resize-none rounded-xl text-base bg-muted',
-          className,
+          className
         )}
         rows={3}
         autoFocus
@@ -288,7 +290,7 @@ export function MultimodalInput({
 
       {isLoading ? (
         <Button
-          className="rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 border dark:border-zinc-600"
+          className='rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 border dark:border-zinc-600'
           onClick={(event) => {
             event.preventDefault();
             stop();
@@ -299,7 +301,7 @@ export function MultimodalInput({
         </Button>
       ) : (
         <Button
-          className="rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 border dark:border-zinc-600"
+          className='rounded-full p-1.5 h-fit absolute bottom-2 right-2 m-0.5 border dark:border-zinc-600'
           onClick={(event) => {
             event.preventDefault();
             submitForm();
@@ -309,18 +311,6 @@ export function MultimodalInput({
           <ArrowUpIcon size={14} />
         </Button>
       )}
-
-      <Button
-        className="rounded-full p-1.5 h-fit absolute bottom-2 right-11 m-0.5 dark:border-zinc-700"
-        onClick={(event) => {
-          event.preventDefault();
-          fileInputRef.current?.click();
-        }}
-        variant="outline"
-        disabled={isLoading}
-      >
-        <PaperclipIcon size={14} />
-      </Button>
     </div>
   );
 }
