@@ -122,7 +122,7 @@ The application uses a relational database with the following core entities:
 | Variable         | Description                                                                                                                          | Required | Example                           |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------- |
 | `OPENAI_API_KEY` | API key for OpenAI services. Get it from [OpenAI Platform](https://platform.openai.com/account/api-keys)                             | Yes      | sk-abcd1234...                    |
-| `AUTH_SECRET`    | Secret key for authentication. Generate using [Secret Generator](https://generate-secret.vercel.app/32) or `openssl rand -base64 32` | Yes      | base64:ABC123...                  |
+| `AUTH_SECRET`    | Secret key for authentication. Generate using `npx auth secret`                                                                    | Yes      | xkjjk329...                  |
 | `POSTGRES_URL`   | Connection string for Supabase                                                                                                       | Yes      | postgres://user:pass@host:5432/db |
 
 ## Prerequisites
@@ -153,8 +153,6 @@ vercel env pull
 pnpm install
 pnpm dev
 ```
-
-2. Setup Supabase for your project
 
 ## Deployment
 
