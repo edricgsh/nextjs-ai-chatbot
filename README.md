@@ -1,61 +1,165 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Next.js AI Chatbot</h1>
-</a>
+# AI-Powered Chat Application
 
-<p align="center">
-  An Open-Source AI Chatbot Template Built With Next.js and the AI SDK by Vercel.
-</p>
+A modern chat application built with AI capabilities, leveraging OpenAI's API for intelligent interactions. The application is fully hosted on Vercel's platform with a serverless architecture and uses Supabase for data persistence.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
-</p>
-<br/>
+## System Architecture
 
-## Features
+![alt text](overall_architecture.png)
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://sdk.vercel.ai/docs)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports OpenAI (default), Anthropic, Cohere, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Vercel Postgres powered by Neon](https://vercel.com/storage/postgres) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [NextAuth.js](https://github.com/nextauthjs/next-auth)
-  - Simple and secure authentication
+### Overview
 
-## Model Providers
+- **Frontend**: Single page application hosted on Vercel
+- **Backend**: Serverless functions running on Vercel's infrastructure
+- **Database**: PostgreSQL database hosted on Supabase
+- **Authentication**: NextAuth for secure JWT-based authentication
+- **AI Integration**: OpenAI API integration via AI SDK
 
-This template ships with OpenAI `gpt-4o` as the default. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+### Key Components
 
-## Deploy Your Own
+- Frontend and backend are both hosted on Vercel's platform
+- REST API communication between frontend and backend
+- Secured endpoints using JWT tokens
+- Real-time data storage in Supabase
+- AI-powered chat interactions through OpenAI's API
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+## Frontend
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET,OPENAI_API_KEY&envDescription=Learn%20more%20about%20how%20to%20get%20the%20API%20Keys%20for%20the%20application&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot%2Fblob%2Fmain%2F.env.example&demo-title=AI%20Chatbot&demo-description=An%20Open-Source%20AI%20Chatbot%20Template%20Built%20With%20Next.js%20and%20the%20AI%20SDK%20by%20Vercel.&demo-url=https%3A%2F%2Fchat.vercel.ai&stores=[{%22type%22:%22postgres%22},{%22type%22:%22blob%22}])
+The frontend is a modern web application with the following features:
 
-## Running locally
+- Clean and intuitive user interface
+- Real-time chat capabilities
+- Document viewing and management
+- Voting system for messages
+- Suggestion system for content improvement
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+### API Endpoints
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various OpenAI and authentication provider accounts.
+- `/chat`: Handle chat interactions
+- `/history`: Manage chat history
+- `/suggestions`: Process and manage suggestions
+- `/vote`: Handle voting on messages
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+## Backend
+
+The backend is built using Vercel Serverless Functions with these key features:
+
+- Stateless architecture for scalability
+- Secure API endpoints
+- Integration with OpenAI's API
+- Database operations with Supabase
+
+### Key Features
+
+- Message processing and storage
+- User authentication and authorization
+- Document management
+- Suggestion processing
+- Voting system implementation
+
+## Data Model
+
+The application uses a relational database with the following core entities:
+
+![alt text](database_schema.png)
+
+### User
+
+- `id` (uuid): Primary key
+- `email` (varchar): User's email address
+- `password` (varchar): Hashed password
+
+### Chat
+
+- `id` (uuid): Primary key
+- `createdAt` (timestamp): Chat creation time
+- `userId` (uuid): Reference to User
+- `title` (text): Chat title
+
+### Message
+
+- `id` (uuid): Primary key
+- `chatId` (uuid): Reference to Chat
+- `role` (varchar): Message role (user/assistant)
+- `content` (json): Message content
+- `createdAt` (timestamp): Message timestamp
+
+### Document
+
+- `id` (uuid): Primary key
+- `title` (text): Document title
+- `content` (text): Document content
+- `userId` (uuid): Reference to User
+- `createdAt` (timestamp): Document creation time
+
+### Suggestion
+
+- `id` (uuid): Primary key
+- `documentId` (uuid): Reference to Document
+- `originalText` (text): Original document text
+- `suggestedText` (text): Suggested improvement
+- `description` (text): Suggestion description
+- `isResolved` (bool): Resolution status
+- `userId` (uuid): Reference to User
+- `createdAt` (timestamp): Suggestion creation time
+- `documentCreatedAt` (timestamp): Referenced document creation time
+
+### Vote
+
+- `chatId` (uuid): Reference to Chat
+- `messageId` (uuid): Reference to Message
+- `isUpvoted` (bool): Vote status
+
+### Relationships
+
+- Users can create multiple Chats and Documents
+- Each Chat contains multiple Messages
+- Documents can have multiple Suggestions
+- Messages can receive multiple Votes
+- All entities maintain proper foreign key relationships for data integrity
+
+## Environment Variables
+
+| Variable         | Description                                                                                                                          | Required | Example                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------ | -------- | --------------------------------- |
+| `OPENAI_API_KEY` | API key for OpenAI services. Get it from [OpenAI Platform](https://platform.openai.com/account/api-keys)                             | Yes      | sk-abcd1234...                    |
+| `AUTH_SECRET`    | Secret key for authentication. Generate using [Secret Generator](https://generate-secret.vercel.app/32) or `openssl rand -base64 32` | Yes      | base64:ABC123...                  |
+| `POSTGRES_URL`   | Connection string for Supabase                                                                                                       | Yes      | postgres://user:pass@host:5432/db |
+
+## Prerequisites
+
+1. Install Vercel CLI:
+
+```bash
+npm i -g vercel
+```
+
+2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory):
+
+```bash
+vercel link
+```
+
+3. Download your environment variables:
+
+```bash
+vercel env pull
+```
+
+## Local Development
+
+1. Install dependencies and start development server:
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000/).
+2. Setup Supabase for your project
+
+## Deployment
+
+Deploy your application to production:
+
+```bash
+vercel --prod
+```
